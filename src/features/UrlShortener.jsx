@@ -1,12 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const UrlShortener = () => {
   const [url, setUrl] = useState("");
   const [shortenedUrl, setShortenedUrl] = useState("");
+  const [history, setHistory] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [history, setHistory] = useState([]);
-  const token = import.meta.env.VITE_API_KEY;
+
+  // Load saved URLs from localStorage when the component mounts
+  useEffect(() => {
+    const savedUrls = localStorage.getItem("shortenedUrls");
+    if (savedUrls) {
+      setHistory(JSON.parse(savedUrls));
+    }
+  }, []);
+
   const handleShortenUrl = async () => {
     if (!url) {
       setError("Please add a link!");
@@ -16,17 +24,19 @@ const UrlShortener = () => {
     try {
       setError("");
       setLoading(true);
-
       // Log the URL being sent to the API
       console.log("Fetching API with URL:", url);
 
-      const response = await fetch("https://cleanuri.com/api/v1/shorten", {
-        method: "POST", // CleanURI API uses POST requests
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded", // Correct Content-Type for form-encoded data
-        },
-        body: new URLSearchParams({ url }), // Pass the URL in the request body as form-encoded
-      });
+      const response = await fetch(
+        "https://cors-anywhere.herokuapp.com/https://cleanuri.com/api/v1/shorten",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: new URLSearchParams({ url }),
+        }
+      );
 
       // Log the raw response
       console.log("Raw Response:", response);
@@ -42,11 +52,15 @@ const UrlShortener = () => {
 
       if (data.result_url) {
         const newShortenedUrl = data.result_url;
-        setShortenedUrl(newShortenedUrl);
-        setHistory((prevHistory) => [
-          ...prevHistory,
+
+        // Update state and save to localStorage
+        const updatedHistory = [
+          ...history,
           { original: url, shortened: newShortenedUrl },
-        ]);
+        ];
+        setShortenedUrl(newShortenedUrl);
+        setHistory(updatedHistory);
+        localStorage.setItem("shortenedUrls", JSON.stringify(updatedHistory));
       } else {
         setError("Failed to shorten the URL. Please try again.");
         console.error("API Error:", data);
@@ -59,88 +73,81 @@ const UrlShortener = () => {
     }
   };
 
-  const handleCopyToClipboard = (urlToCopy) => {
+  const handleCopyToClipboard = (urlToCopy, index) => {
     navigator.clipboard.writeText(urlToCopy);
-    alert("Copied to clipboard!");
+
+    // Update the button text to "Copied!" for the clicked item
+    setHistory((prevHistory) =>
+      prevHistory.map((item, i) =>
+        i === index ? { ...item, copied: true } : { ...item, copied: false }
+      )
+    );
+
+    // Reset the "Copied!" state after 2 seconds
+    setTimeout(() => {
+      setHistory((prevHistory) =>
+        prevHistory.map((item) => ({ ...item, copied: false }))
+      );
+    }, 1000);
   };
 
   return (
-    <div className="bg-[#F0F1F6]  px-4 md:px-20 lg:px-[130px] pt-5">
-      <div className="bg-[url('src/assets/bg-shorten-desktop.svg')] p-6 rounded-lg shadow-md py-10  bg-[#3A3053]  ">
-        <div className="flex  flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4 ">
+    <div className="bg-[#F0F1F6] px-4 md:px-20 lg:px-[130px] pt-5">
+      {/* Input and Button Section with Background Image */}
+      <div className="bg-[url('src/assets/bg-shorten-mobile.svg')] md:bg-[url('src/assets/bg-shorten-desktop.svg')] bg-[#3A3053] bg-cover bg-center p-6 rounded-lg shadow-md max-w-full overflow-hidden md:py-10">
+        <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
           <input
             type="text"
             placeholder="Shorten a link here..."
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            className="flex-1 bg-white w-full md:w-fit md:px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BD1D0]"
+            className="flex-1 bg-white px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2BD1D0]  w-full"
           />
           <button
             onClick={handleShortenUrl}
-            className="bg-[#2BD1D0] text-white w-full md:w-fit md:px-6 py-3 rounded-lg hover:bg-[#9DE1E2]"
-            disabled={loading}
+            className="bg-[#2BD1D0] text-white px-10 py-3 text-lg font-bold rounded-lg hover:bg-[#9DE1E2] transition duration-300  w-full md:w-auto"
           >
             {loading ? "Shortening..." : "Shorten It!"}
           </button>
         </div>
-        {error && <p className="text-red-500 mt-2">{error}</p>}
-        {shortenedUrl && (
-          <div className="mt-6">
-            <p className="text-gray-700">Shortened URL:</p>
-            <div className="flex items-center space-x-4">
+
+        {/* Display error message */}
+        {error && <p className="text-red-500 italic mt-4">{error}</p>}
+      </div>
+
+      {/* Display shortened URLs */}
+      <ul className="mt-6 space-y-4">
+        {history.map((item, index) => (
+          <li
+            key={index}
+            className="bg-white p-4 rounded-lg flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4 shadow-md"
+          >
+            <span className="text-[#3E3D41] text-lg font-medium break-all border-b md:border-none pb-2 md:pb-0 w-full">
+              {item.original}
+            </span>
+            <div className="flex flex-col md:flex-row items-left space-y-4 md:space-y-0 md:space-x-4 w-full">
               <a
-                href={shortenedUrl}
+                href={item.shortened}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#2BD1D0] font-bold"
+                className="text-[#2BD1D0] pt-3 md:ml-auto font-medium break-all"
               >
-                {shortenedUrl}
+                {item.shortened}
               </a>
               <button
-                onClick={() => handleCopyToClipboard(shortenedUrl)}
-                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300"
+                onClick={() => handleCopyToClipboard(item.shortened, index)}
+                className={`${
+                  item.copied
+                    ? "bg-[#3A3053] text-white"
+                    : "bg-[#2BD1D0] text-white"
+                } px-8 py-3 rounded-lg hover:opacity-90 transition duration-300 md:ml-auto text-xl font-bold hover:bg-[#9DE1E2]`}
               >
-                Copy
+                {item.copied ? "Copied!" : "Copy"}
               </button>
             </div>
-          </div>
-        )}
-        {history.length > 0 && (
-          <div className="mt-8">
-            <h3 className="text-xl font-bold text-[#36343F] mb-4">
-              Shortened Links History
-            </h3>
-            <ul className="space-y-4">
-              {history.map((item, index) => (
-                <li
-                  key={index}
-                  className="flex flex-col md:flex-row md:items-center md:justify-between bg-gray-100 p-4 rounded-lg"
-                >
-                  <p className="text-gray-700">
-                    <span className="font-bold">Original:</span> {item.original}
-                  </p>
-                  <div className="flex items-center space-x-4 mt-2 md:mt-0">
-                    <a
-                      href={item.shortened}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#2BD1D0] font-bold"
-                    >
-                      {item.shortened}
-                    </a>
-                    <button
-                      onClick={() => handleCopyToClipboard(item.shortened)}
-                      className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300"
-                    >
-                      Copy
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
