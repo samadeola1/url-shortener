@@ -27,16 +27,17 @@ const UrlShortener = () => {
       // Log the URL being sent to the API
       console.log("Fetching API with URL:", url);
 
-      const response = await fetch(
-        "https://cors-anywhere.herokuapp.com/https://cleanuri.com/api/v1/shorten",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          body: new URLSearchParams({ url }),
-        }
-      );
+      // Construct the API endpoint with the user-provided URL as a query parameter
+      const apiUrl = `https://tinyurl.com/api-create.php?url=${encodeURIComponent(
+        url
+      )}`;
+
+      const response = await fetch(apiUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json", // Adjusted to match GET request requirements
+        },
+      });
 
       // Log the raw response
       console.log("Raw Response:", response);
@@ -45,13 +46,13 @@ const UrlShortener = () => {
         throw new Error("Failed to fetch the shortened URL");
       }
 
-      const data = await response.json();
+      const data = await response.text(); // TinyURL API returns plain text, not JSON
 
       // Log the API response
       console.log("API Response:", data);
 
-      if (data.result_url) {
-        const newShortenedUrl = data.result_url;
+      if (data) {
+        const newShortenedUrl = data;
 
         // Update state and save to localStorage
         const updatedHistory = [
@@ -63,7 +64,7 @@ const UrlShortener = () => {
         localStorage.setItem("shortenedUrls", JSON.stringify(updatedHistory));
       } else {
         setError("Failed to shorten the URL. Please try again.");
-        console.error("API Error:", data);
+        console.error("API Error: No data returned");
       }
     } catch (err) {
       setError("An error occurred. Please try again.");
