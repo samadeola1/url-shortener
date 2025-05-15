@@ -25,7 +25,7 @@ const UrlShortener = () => {
       setError("");
       setLoading(true);
       // Log the URL being sent to the API
-      console.log("Fetching API with URL:", url);
+      // console.log("Fetching API with URL:", url);
 
       // Construct the API endpoint with the user-provided URL as a query parameter
       const apiUrl = `https://tinyurl.com/api-create.php?url=${encodeURIComponent(
@@ -40,7 +40,7 @@ const UrlShortener = () => {
       });
 
       // Log the raw response
-      console.log("Raw Response:", response);
+      // console.log("Raw Response:", response);
 
       if (!response.ok) {
         throw new Error("Failed to fetch the shortened URL");
@@ -49,7 +49,7 @@ const UrlShortener = () => {
       const data = await response.text(); // TinyURL API returns plain text, not JSON
 
       // Log the API response
-      console.log("API Response:", data);
+      // console.log("API Response:", data);
 
       if (data) {
         const newShortenedUrl = data;
@@ -64,7 +64,7 @@ const UrlShortener = () => {
         localStorage.setItem("shortenedUrls", JSON.stringify(updatedHistory));
       } else {
         setError("Failed to shorten the URL. Please try again.");
-        console.error("API Error: No data returned");
+        // console.error("API Error: No data returned");
       }
     } catch (err) {
       setError("An error occurred. Please try again.");
