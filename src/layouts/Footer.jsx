@@ -20,17 +20,26 @@ const Footer = () => {
             <h3 className="font-bold text-[18px] mb-4">Features</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-[#9C9BA2] hover:text-[#2BD1D0]">
+                <a
+                  href="#"
+                  className="text-[#9C9BA2] hover:text-[#2BD1D0] pointer-events-none cursor-default"
+                >
                   Link Shortening
                 </a>
               </li>
               <li>
-                <a href="#" className="text-[#9C9BA2] hover:text-[#2BD1D0]">
+                <a
+                  href="#"
+                  className="text-[#9C9BA2] hover:text-[#2BD1D0] pointer-events-none cursor-default"
+                >
                   Branded Links
                 </a>
               </li>
               <li>
-                <a href="#" className="text-[#9C9BA2] hover:text-[#2BD1D0]">
+                <a
+                  href="#"
+                  className="text-[#9C9BA2] hover:text-[#2BD1D0] pointer-events-none cursor-default"
+                >
                   Analytics
                 </a>
               </li>
@@ -42,17 +51,26 @@ const Footer = () => {
             <h3 className="font-bold text-[18px] mb-4">Resources</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-[#9C9BA2] hover:text-[#2BD1D0]">
+                <a
+                  href="#"
+                  className="text-[#9C9BA2] hover:text-[#2BD1D0] pointer-events-none cursor-default"
+                >
                   Blog
                 </a>
               </li>
               <li>
-                <a href="#" className="text-[#9C9BA2] hover:text-[#2BD1D0]">
+                <a
+                  href="#"
+                  className="text-[#9C9BA2] hover:text-[#2BD1D0] pointer-events-none cursor-default"
+                >
                   Developers
                 </a>
               </li>
               <li>
-                <a href="#" className="text-[#9C9BA2] hover:text-[#2BD1D0]">
+                <a
+                  href="#"
+                  className="text-[#9C9BA2] hover:text-[#2BD1D0] pointer-events-none cursor-default"
+                >
                   Support
                 </a>
               </li>
@@ -64,22 +82,34 @@ const Footer = () => {
             <h3 className="font-bold text-[18px] mb-4">Company</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-[#9C9BA2] hover:text-[#2BD1D0]">
+                <a
+                  href="#"
+                  className="text-[#9C9BA2] hover:text-[#2BD1D0] pointer-events-none cursor-default"
+                >
                   About
                 </a>
               </li>
               <li>
-                <a href="#" className="text-[#9C9BA2] hover:text-[#2BD1D0]">
+                <a
+                  href="#"
+                  className="text-[#9C9BA2] hover:text-[#2BD1D0] pointer-events-none cursor-default"
+                >
                   Our Team
                 </a>
               </li>
               <li>
-                <a href="#" className="text-[#9C9BA2] hover:text-[#2BD1D0]">
+                <a
+                  href="#"
+                  className="text-[#9C9BA2] hover:text-[#2BD1D0] pointer-events-none cursor-default"
+                >
                   Careers
                 </a>
               </li>
               <li>
-                <a href="#" className="text-[#9C9BA2] hover:text-[#2BD1D0]">
+                <a
+                  href="#"
+                  className="text-[#9C9BA2] hover:text-[#2BD1D0] pointer-events-none cursor-default"
+                >
                   Contact
                 </a>
               </li>
@@ -89,32 +119,32 @@ const Footer = () => {
 
         {/* Social Media Icons */}
         <div className="flex justify-center md:justify-start space-x-6 mt-10 md:mt-0">
-          <a href="#" className="hover:text-[#2BD1D0] transition duration-300">
+          <a href="#" className="hover:text-[#2BD1D0] transition duration-300 pointer-events-none cursor-default">
             <img
               src={facebookIcon}
               alt="Facebook"
               className="hover:scale-110 transition duration-300"
             />
           </a>
-          <a href="#" className="hover:text-[#2BD1D0] transition duration-300">
+          <a href="#" className="hover:text-[#2BD1D0] transition duration-300 pointer-events-none cursor-default">
             <img
               src={twitterIcon}
               alt="Twitter"
               className="hover:scale-110 transition duration-300"
             />
           </a>
-          <a href="#" className="hover:text-[#2BD1D0] transition duration-300">
+          <a href="#" className="hover:text-[#2BD1D0] transition duration-300 pointer-events-none cursor-default">
             <img
               src={pinterestIcon}
               alt="Pinterest"
-              className="hover:scale-110 transition duration-300"
+              className="hover:scale-110 transition duration-300 pointer-events-none cursor-default"
             />
           </a>
-          <a href="#" className="hover:text-[#2BD1D0] transition duration-300">
+          <a href="#" className="hover:text-[#2BD1D0] transition duration-300 pointer-events-none cursor-default">
             <img
               src={instagramIcon}
               alt="Instagram"
-              className="hover:scale-110 transition duration-300"
+              className="hover:scale-110 transition duration-300 pointer-events-none cursor-default"
             />
           </a>
         </div>

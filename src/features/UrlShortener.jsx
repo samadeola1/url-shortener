@@ -73,6 +73,11 @@ const UrlShortener = () => {
       setLoading(false);
     }
   };
+  // Clear history function
+  const handleClearHistory = () => {
+    setHistory([]); // Clear the history state
+    localStorage.removeItem("shortenedUrls"); // Remove from localStorage
+  };
 
   const handleCopyToClipboard = (urlToCopy, index) => {
     navigator.clipboard.writeText(urlToCopy);
@@ -117,38 +122,51 @@ const UrlShortener = () => {
       </div>
 
       {/* Display shortened URLs */}
-      <ul className="mt-6 space-y-4">
-        {history.map((item, index) => (
-          <li
-            key={index}
-            className="bg-white p-4 rounded-lg flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4 shadow-md"
-          >
-            <span className="text-[#3E3D41] text-lg font-medium break-all border-b md:border-none pb-2 md:pb-0 w-full">
-              {item.original}
-            </span>
-            <div className="flex flex-col md:flex-row items-left space-y-4 md:space-y-0 md:space-x-4 w-full">
-              <a
-                href={item.shortened}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#2BD1D0] pt-3 md:ml-auto font-medium break-all"
+      {history.length > 0 && (
+        <div className="mt-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-bold text-gray-700">Link History</h2>
+            <button
+              onClick={handleClearHistory}
+              className="bg-[#2BD1D0] text-white px-4 py-2 rounded-lg hover:bg-[#9DE1E2] transition duration-300 text-sm md:text-base"
+            >
+              Clear History
+            </button>
+          </div>
+          <ul className="space-y-4">
+            {history.map((item, index) => (
+              <li
+                key={index}
+                className="bg-white p-4 rounded-lg flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4 shadow-md"
               >
-                {item.shortened}
-              </a>
-              <button
-                onClick={() => handleCopyToClipboard(item.shortened, index)}
-                className={`${
-                  item.copied
-                    ? "bg-[#3A3053] text-white"
-                    : "bg-[#2BD1D0] text-white"
-                } px-8 py-3 rounded-lg hover:opacity-90 transition duration-300 md:ml-auto text-xl font-bold hover:bg-[#9DE1E2]`}
-              >
-                {item.copied ? "Copied!" : "Copy"}
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
+                <span className="text-[#3E3D41] text-lg font-medium break-all border-b md:border-none pb-2 md:pb-0 w-full">
+                  {item.original}
+                </span>
+                <div className="flex flex-col md:flex-row items-left space-y-4 md:space-y-0 md:space-x-4 w-full">
+                  <a
+                    href={item.shortened}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#2BD1D0] font-bold break-all"
+                  >
+                    {item.shortened}
+                  </a>
+                  <button
+                    onClick={() => handleCopyToClipboard(item.shortened, index)}
+                    className={`${
+                      item.copied
+                        ? "bg-[#3A3053] text-white"
+                        : "bg-[#2BD1D0] text-white"
+                    } px-8 py-3 rounded-lg hover:opacity-90 transition duration-300 md:ml-auto text-xl font-bold hover:bg-[#9DE1E2]`}
+                  >
+                    {item.copied ? "Copied!" : "Copy"}
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

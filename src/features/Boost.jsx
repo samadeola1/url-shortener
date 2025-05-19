@@ -6,7 +6,7 @@ const Boost = () => {
       <h2 className="text-white text-[28px] md:text-[36px] font-bold mb-6">
         Boost your links today
       </h2>
-      <button className="bg-[#2BD1D0] text-white px-8 py-3 rounded-full text-[16px] font-bold hover:bg-[#9DE1E2] transition duration-300">
+      <button className="bg-[#2BD1D0] text-white px-8 py-3 rounded-full text-[16px] font-bold hover:bg-[#9DE1E2] transition duration-300 pointer-events-none cursor-default">
         Get Started
       </button>
     </section>
